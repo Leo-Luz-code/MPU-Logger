@@ -512,12 +512,24 @@ void capture_mpu_data_and_save()
         mpu6050_read_raw(aceleracao, gyro, &temp);
         sample_count++;
 
+        const float accel_scale = 2.0f;  // +- 2g
+        const float gyro_scale = 500.0f; // +- 500°/s
+
+        // Normalização
+        float accel_x_g = (float)aceleracao[0] * accel_scale / 32768.0f;
+        float accel_y_g = (float)aceleracao[1] * accel_scale / 32768.0f;
+        float accel_z_g = (float)aceleracao[2] * accel_scale / 32768.0f;
+
+        float gyro_x_dps = (float)gyro[0] * gyro_scale / 32768.0f;
+        float gyro_y_dps = (float)gyro[1] * gyro_scale / 32768.0f;
+        float gyro_z_dps = (float)gyro[2] * gyro_scale / 32768.0f;
+
         char buffer[150];
         // Formato CSV corrigido: valores separados por vírgula, sem espaços ou texto extra
-        sprintf(buffer, "%lu,%d,%d,%d,%d,%d,%d\n",
+        sprintf(buffer, "%lu,%.3f,%.3f,%.3f,%.3f,%.3f,%.3f\n",
                 sample_count,
-                aceleracao[0], aceleracao[1], aceleracao[2],
-                gyro[0], gyro[1], gyro[2]);
+                accel_x_g, accel_y_g, accel_z_g,
+                gyro_x_dps, gyro_y_dps, gyro_z_dps);
 
         UINT bw;
         res = f_write(&file, buffer, strlen(buffer), &bw);
