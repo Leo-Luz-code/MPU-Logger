@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import csv
 
 # Lendo os dados do arquivo CSV
-with open('mpu_data5.csv', 'r') as file:
+with open('mpu_data2.csv', 'r') as file:
     reader = csv.reader(file)
     header = next(reader)  # Lê o cabeçalho
     data = list(reader)
